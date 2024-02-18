@@ -60,7 +60,20 @@ App.init = function () {
     evt.preventDefault();
   };
   $("#drop").ondrop = evt => {
-    $("input[type=file]").files = evt.dataTransfer.files;
+    const droppedFiles = evt.dataTransfer.files;
+
+    // Create a new FileList object with dropped files
+    const fileList = new DataTransfer();
+    for (const file of droppedFiles) {
+      fileList.items.add(file);
+    }
+
+    // Set the files property of the input element with the new FileList
+    $("input[type=file]").files = fileList.files;
+
+    // Trigger the change event to handle the dropped files
+    $("input[type=file]").dispatchEvent(new Event("change"));
+
     $("footer").classList.add("hasFiles");
     $("#drop").classList.remove("active");
     evt.preventDefault();
